@@ -39,7 +39,7 @@ tool does exactly this:
                     --output-path .\webs-add-ins.csv
 
 Dumping the metadata might take hours depending on the size of the
-tenant. When it's done, the [webs-add-ins.csv](Webs-add-ins-sample-csv) file contain the following
+tenant. When it's done, the [webs-add-ins.csv](Webs-add-ins-sample.csv) file contain the following
 columns of interest:
 
 - *Id*. Unique to every installed add-in instance.
