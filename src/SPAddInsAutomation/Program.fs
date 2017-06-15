@@ -17,7 +17,7 @@ type addIns = CsvProvider<Separators = ";", HasHeaders = true, Sample = "Webs-ad
 let current = addIns.Load websAddInsCsvPath
 
 let urls =
-    current.Rows 
+    current.Rows
     |> Seq.filter (fun r -> 
         (r.Title.Trim() = "Nintex Workflow for Office 365" && r.Version.Trim() <> "1.0.4.0") ||
         (r.Title.Trim() = "Nintex Forms for Office 365" && r.Version.Trim() <> "1.2.3.0"))
@@ -47,6 +47,7 @@ let main argv =
         url (sprintf "%s/_layouts/15/viewlsts.aspx" webUrl)        
         try
             configuration.elementTimeout <- 5.
+            // Update specific add-in instance and not just any instance
             click (sprintf "a[href='javascript:handleUpdateApp(\\'%s\\');']" id)
             // Previous step triggers a in-page pop-up/overlay which can take some time load
             configuration.elementTimeout <- 60.
@@ -57,6 +58,7 @@ let main argv =
             sleep 10.
         with
         | :? CanopyElementNotFoundException -> 
-            printfn "Application Id %s on '%s' already either updated or in process of being updated" id webUrl
+            printfn "Application Id %s on '%s' is being updated or is already up-to-date" id webUrl
 
+    quit()
     0

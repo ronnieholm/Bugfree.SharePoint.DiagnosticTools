@@ -3,8 +3,6 @@
 Use SharePointAddInsAutomation for automating the updating of add-ins
 across tenant.
 
-Requires Visual Studio 2017 to compile.
-
 Below we outline how to identify and update SharePoint add-ins
 (formerly known as SharePoint apps). Using
 [SPReports](https://github.com/ronnieholm/Bugfree.SharePoint.DiagnosticTools/tree/master/src/SPReports),
@@ -13,15 +11,15 @@ tenant. Next the CSV report is fed into SharePointAddInsAutomation to
 automate the app updating flow. Unfortunately, no API for updating is
 provided by Microsoft, so we fall back browser automation.
 
-As an example, suppose we're in the process of [migrating Nintex to a
+As the running example, we'll use [migrating Nintex to a
 local datacenter](https://community.nintex.com/docs/DOC-3921) -- one
-closer to where the SharePoint Online tenent is hosted. To support
-such migration, we must update the Nintex Workflow and Nintex Forms
-add-ins to a recent version.
+closer to where the SharePoint Online tenent is hosted. To complete
+such a migration, we must update the Nintex Workflow and Nintex Forms
+add-ins to their current versions.
 
-The identification and updating approach isn't specific to Nintex. Any
-add-ins can be identified and updated using
-SharePointAddInsAutomation.
+Identifying and updating add-in instances using SharePointAddInsAutomation 
+works with any add-in, however. The basic SharePoint dialogs for updating
+an add-in are the same across any add-in.
 
 ## Identifying which add-ins are installed where
 
@@ -31,19 +29,17 @@ add-in instance reported. The
 [SPReports](https://github.com/ronnieholm/Bugfree.SharePoint.DiagnosticTools/tree/master/src/SPReports)
 tool does exactly this:
 
-<pre>
-.\SPReports.exe --dump-metadata
-                --username rh@bugfree.onmicrosoft.com
-                --password secret
-                --tenant-name bugfree
-                --ouptput-path .\dump.bin
-.\SPReports.exe --webs-add-ins
-                --input-path .\dump.bin
-                --output-path .\webs-add-ins.csv
-</pre>
+    .\SPReports.exe --dump-metadata
+                    --username rh@bugfree.onmicrosoft.com
+                    --password secret
+                    --tenant-name bugfree
+                    --ouptput-path .\dump.bin
+    .\SPReports.exe --webs-add-ins
+                    --input-path .\dump.bin
+                    --output-path .\webs-add-ins.csv
 
 Dumping the metadata might take hours depending on the size of the
-tenant. When it's done, the dump.csv file contain the following
+tenant. When it's done, the [webs-add-ins.csv](Webs-add-ins-sample-csv) file contain the following
 columns of interest:
 
 - *Id*. Unique to every installed add-in instance.
@@ -101,6 +97,14 @@ To run SharePointAddInsAutomation, first change the variables marked
 as such at the top of Program.fs. Next either re-compile and run the
 executable or execute the code in F# interactive.
 
+## Compiling
+
+Use Visual Studio 2017.
+
 ## Supported platforms
 
 SharePoint on-premise and SharePoint Online.
+
+## Contact
+
+Open an issue on this repository or drop me a mail at mail@bugfree.dk.
