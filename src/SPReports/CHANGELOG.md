@@ -1,0 +1,21 @@
+# CHANGELOG
+
+## SPReports 1.3.0 (2017-05-30)
+
+* Updated Nuget packages to latest version
+* Updated F# projects to F# Core 4.1
+* When traversing tenant, include metadata about AddIns in the dump ([#1](https://github.com/ronnieholm/Bugfree.SharePoint.DiagnosticTools/issues/1))
+* When traversing tenant, include metadata about Workflows in the dump ([#3](https://github.com/ronnieholm/Bugfree.SharePoint.DiagnosticTools/issues/3))
+* Switch to Argu for more robost command-line parsing ([#2](https://github.com/ronnieholm/Bugfree.SharePoint.DiagnosticTools/issues/2))
+
+##  SPReports 1.2.0 (2016-09-12)
+
+* Include item version in dump
+
+##  SPReports 1.1.0 (2016-08-24)
+
+* Added --dump-metadata and --webs-file-extensions-count options
+
+## SPReports 1.0.0 (2016-08-11)
+
+* Initial release

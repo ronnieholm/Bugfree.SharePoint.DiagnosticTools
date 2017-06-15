@@ -1,0 +1,3 @@
+﻿Id; WebUrl; ProductId; Title; Version; AppPrincipalId; AppWebFullUrl
+afbd02b6-40db-45ac-85e4-7ff6b52e4d57; https://bugfree.sharepoint.com/sites/test; 353e0dc9-57f5-40da-ae3f-380cd5385ab9; Nintex Forms for Office 365; 1.2.3.0; i:0i.t|ms.sp.ext|73e49b7f-c0a4-4891-b2bb-65f1f7142c79@fe91ef12-3cbc-456a-8632-b8d139d5d3a1; https://bugfree-e2689b1212d40c.sharepoint.com/sites/test/FormsApp
+abd756e9-c260-41cc-9a9f-4483ccc6c5a3; https://bugfree.sharepoint.com/sites/test; 5d3d5c89-3c4c-4b46-ac2c-86095ea300c7; Nintex Workflow for Office 365; 1.0.4.0; i:0i.t|ms.sp.ext|10a8caac-6863-42d7-a63b-421383acfb8b@fe91ef12-3cbc-456a-8632-b8d139d5d3a1; https://bugfree-e2689b1212d40b.sharepoint.com/sites/test/NintexWorkflowforOffice365
