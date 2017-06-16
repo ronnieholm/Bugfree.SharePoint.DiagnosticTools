@@ -63,6 +63,7 @@
     <None Include="Webs-add-ins-sample.csv" />
     <None Include="README.md" />
     <None Include="TODO.md" />
+    <None Include="CHANGELOG.md" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="canopy">
