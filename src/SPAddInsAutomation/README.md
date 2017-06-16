@@ -1,7 +1,7 @@
 # SharePointAddInsAutomation
 
 Use SharePointAddInsAutomation for automating the updating of add-ins
-across tenant.
+across site collections.
 
 Below we outline how to identify and update SharePoint add-ins
 (formerly known as SharePoint apps). Using
@@ -11,15 +11,16 @@ tenant. Next the CSV report is fed into SharePointAddInsAutomation to
 automate the app updating flow. Unfortunately, no API for updating is
 provided by Microsoft, so we fall back browser automation.
 
-As the running example, we'll use [migrating Nintex to a
-local datacenter](https://community.nintex.com/docs/DOC-3921) -- one
-closer to where the SharePoint Online tenent is hosted. To complete
-such a migration, we must update the Nintex Workflow and Nintex Forms
-add-ins to their current versions.
+As the running example, we'll use [migrating Nintex to a local
+datacenter](https://community.nintex.com/docs/DOC-3921) -- one closer
+to where the SharePoint Online tenent is hosted. To complete such a
+migration, we must update the Nintex Workflow and Nintex Forms add-ins
+to their current versions.
 
-Identifying and updating add-in instances using SharePointAddInsAutomation 
-works with any add-in, however. The basic SharePoint dialogs for updating
-an add-in are the same across any add-in.
+Identifying and updating add-in instances using
+SharePointAddInsAutomation works with any add-in, however. The basic
+SharePoint dialogs for updating an add-in are the same across any
+add-in.
 
 ## Identifying which add-ins are installed where
 
@@ -39,16 +40,15 @@ tool does exactly this:
                     --output-path .\webs-add-ins.csv
 
 Dumping the metadata might take hours depending on the size of the
-tenant. When it's done, the [webs-add-ins.csv](Webs-add-ins-sample.csv) file contain the following
-columns of interest:
+tenant. When it's done, the
+[webs-add-ins.csv](Webs-add-ins-sample.csv) file contains the
+following columns of interest:
 
 - *Id*. Unique to every installed add-in instance.
 - *WebUrl*. Url of the form https://bugfree.sharepoint.com/sites/test denoting the web on which
 the add-in is installed.
-- *ProductId*. For Nintex Workflow for Office 365 its value is 
-5d3d5c89-3c4c-4b46-ac2c-86095ea300c7 and for Nintex Forms for Office
-365 it's 353e0dc9-57f5-40da-ae3f-380cd5385ab9. Those values come in handy
-when filtering add-ins.
+- *Title*. Either "Nintex Workflow for Office 365" or "Nintex Forms
+for Office 365". Those values come in handy when filtering add-ins.
 - *Version*. Only applicable to Nintex add-ins. For non-Nintex
 add-ins, version is exposed as a custom property. Normally, the CSOM API
 doesn't provide a way to get at the version otherwise displayed in the UI.
@@ -60,7 +60,7 @@ add-ins and old versions.
 
 Given that no API exists for updating add-ins, and that performing a
 manual update on each web (about 300 webs for my initial Nintex case),
-is click intensitive and time consuming, automation is called for. The
+is click intensive and time consuming, automation is called for. The
 approach taken is to automate the manual steps listed below by remote
 controlling the browser:
 
@@ -93,13 +93,13 @@ of [Selenium](http://www.seleniumhq.org). Selenium in turn abstracts
 away the browser details through drivers such that our automation
 logic becomes browser neutral.
 
+## Compiling and running
+
+Requires Visual Studio 2017 with F# language support.
+
 To run SharePointAddInsAutomation, first change the variables marked
 as such at the top of Program.fs. Next either re-compile and run the
 executable or execute the code in F# interactive.
-
-## Compiling
-
-Use Visual Studio 2017.
 
 ## Supported platforms
 
