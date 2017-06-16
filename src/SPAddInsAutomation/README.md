@@ -12,7 +12,7 @@ provided by Microsoft, so we fall back to browser automation.
 
 We use [migrating Nintex to a local
 datacenter](https://community.nintex.com/docs/DOC-3921) -- one closer
-to where the SharePoint Online tenent is hosted -- as the running
+to where the SharePoint Online tenant is hosted -- as the running
 example. The migration is preconditioned on Nintex Workflow and Nintex
 Forms add-ins being current.
 
@@ -52,7 +52,7 @@ for Office 365". Those values come in handy when filtering add-ins.
 In general, for Nintex-add-ins, the API provides no way to get at the version displayed in the UI.
 
 Thus, now we can filter the Webs-add-ins.csv for Nintex Workflow and
-Nintex Forms add-ins not in a current versions.
+Nintex Forms add-ins not in current versions.
 
 ## Updating add-ins using browser automation
 
