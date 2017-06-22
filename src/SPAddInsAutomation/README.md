@@ -1,6 +1,6 @@
 # SharePointAddInsAutomation
 
-Use SharePointAddInsAutomation to automate add-in updates across site
+SharePointAddInsAutomation automates updating add-ins across site
 collections.
 
 Below we outline how to first identify SharePoint add-ins using

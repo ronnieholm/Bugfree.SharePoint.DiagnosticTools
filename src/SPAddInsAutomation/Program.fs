@@ -14,10 +14,10 @@ let password = "secret"
 let websAddInsCsvPath = "path/to/Webs-add-ins.csv"
 
 type addIns = CsvProvider<Separators = ";", HasHeaders = true, Sample = "Webs-add-ins-sample.csv">
-let current = addIns.Load websAddInsCsvPath
+let currentAddIns = addIns.Load websAddInsCsvPath
 
 let urls =
-    current.Rows
+    currentAddIns.Rows
     |> Seq.filter (fun r -> 
         (r.Title.Trim() = "Nintex Workflow for Office 365" && r.Version.Trim() <> "1.0.4.0") ||
         (r.Title.Trim() = "Nintex Forms for Office 365" && r.Version.Trim() <> "1.2.3.0"))
@@ -29,7 +29,7 @@ let urls =
 #if INTERACTIVE
 #else
 [<EntryPoint>]
-let main argv = 
+let main _ = 
 #endif
     configuration.chromeDir <- (sprintf "%s\..\..\packages\Selenium.WebDriver.ChromeDriver.2.30.0.1\driver\win32" __SOURCE_DIRECTORY__)
     start chrome
