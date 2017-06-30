@@ -12,9 +12,9 @@ does the updating. As Microsoft provides no API for updating add-ins
 we fall back to browser automation.
 
 As an example, we use the updating of Nintex add-ins. Nintex is a good
-example a non-singleton type of add-in and [migrating Nintex to a
+example of a non-singleton type of add-in and [migrating Nintex to a
 local datacenter](https://community.nintex.com/docs/DOC-3921) is
-preconditioned on add-ins across the tenant being up to date.
+preconditioned on Nintex add-ins across the tenant being up to date.
 
 Identifying add-ins with SPReports and updating add-ins with
 SharePointAddInsAutomation works with any add-in,
@@ -44,8 +44,8 @@ following columns of interest to SharePointAddInsAutomation:
 
 - *Id*. Unique to every installed add-in instance.
 - *WebUrl*. Url of the form https://bugfree.sharepoint.com/sites/test denoting the web on which the add-in is installed.
-- *Title*. For Nintex, the value either reads "Nintex Workflow for Office 365" or "Nintex Forms for Office 365". These values come in handy when filtering add-ins.
-- *Version*. Only applicable to Nintex add-ins which expose the version as a custom property. For other add-ins, the CSOM API provides no way to get at the version displayed in the UI.
+- *Title*. For Nintex, the value either reads "Nintex Workflow for Office 365" or "Nintex Forms for Office 365". These values come in handy when filtering add-ins to update.
+- *Version*. Only applicable to Nintex add-ins which expose the version as a custom property. For other types of add-ins, the CSOM API provides no way to get at the version displayed in the UI.
 
 Thus, now we can filter the Webs-add-ins.csv for Nintex Workflow and
 Nintex Forms add-ins not in current versions.
@@ -65,14 +65,14 @@ below by remote controlling the browser:
    <img src="Update-add-in-1.png" height="65%">
 
    The update link contains the Id of the add-in instance, making the
-   link easy to identify among possibly multiple update links on the
+   link easy to identify among multiple add-in update links on the
    page.
 
-2. Upon clicking the update link, a dialog is displayed:
+2. Upon clicking the update link, this dialog is displayed:
 
    <img src="Update-add-in-2.png" height="55%">
 
-   On the dialog, click the GET IT button.
+   On the dialog, click the *GET IT* button.
 
 3. Upon clicking the *GET IT* button, another dialog appears asking us
    to trust the add-in:
@@ -86,8 +86,8 @@ below by remote controlling the browser:
 To remote control the browser, we use
 [Canopy](https://lefthandedgoat.github.io/canopy), an API build on top
 of [Selenium](http://www.seleniumhq.org). Selenium in turn abstracts
-away the browser details through drivers, making the automation
-browser neutral.
+away browser details through drivers, making the automation browser
+neutral.
 
 ## Compiling and running
 
