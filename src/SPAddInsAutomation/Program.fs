@@ -13,8 +13,8 @@ let username = "rh@bugfree.onmicrosoft.com"
 let password = "secret"
 let websAddInsCsvPath = "path/to/Webs-add-ins.csv"
 
-type addIns = CsvProvider<Separators = ";", HasHeaders = true, Sample = "Webs-add-ins-sample.csv">
-let currentAddIns = addIns.Load websAddInsCsvPath
+type AddIns = CsvProvider<Separators = ";", HasHeaders = true, Sample = "Webs-add-ins-sample.csv">
+let currentAddIns = AddIns.Load websAddInsCsvPath
 
 let urls =
     currentAddIns.Rows
@@ -22,7 +22,7 @@ let urls =
         (r.Title.Trim() = "Nintex Workflow for Office 365" && r.Version.Trim() <> "1.0.4.0") ||
         (r.Title.Trim() = "Nintex Forms for Office 365" && r.Version.Trim() <> "1.2.3.0"))
     |> Seq.map (fun r -> (r.Id.ToString(), r.WebUrl.Trim()))
-    // Update add-ins in batches to avoid overloading the platform
+    // Update add-ins in batches to avoid overloading SharePoint
     |> Seq.skip 0
     |> Seq.take 25
 
