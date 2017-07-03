@@ -78,5 +78,5 @@ module WebsWorkflows =
 
     let generateReport dump =
         dump |> Seq.iter visitSiteCollection
-        [| yield "WorkflowType; WebUrl; DisplayName; Description; LastModifiedBy; LastModifiedAt; RestrictToType; RestrictToScope; Published; TaskListId (OutOfTheBox); HistoryListId (OutOfTheBox); Region (Nintex); XXX;"
+        [| yield "WorkflowType; WebUrl; DisplayName; Description; LastModifiedBy; LastModifiedAt; RestrictToType; RestrictToScope; Published; TaskListId (OutOfTheBox); HistoryListId (OutOfTheBox); Region (Nintex)"
            for l in lines do yield l |]
