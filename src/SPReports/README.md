@@ -1,5 +1,7 @@
 # SPReports
 
+Download compiled version of tools under [Releases](https://github.com/ronnieholm/Bugfree.SharePoint.DiagnosticTools/releases).
+
 Generates custom reports based on metadata in SharePoint by first
 collecting and dumping relevant metadata to a file and then quering it
 offline. SPReports comes with a few pre-defined reports, but using any

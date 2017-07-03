@@ -1,5 +1,7 @@
 ﻿# SPDatabaseInspector
 
+Download compiled version of tools under [Releases](https://github.com/ronnieholm/Bugfree.SharePoint.DiagnosticTools/releases).
+
 Current capabilities include the extraction of files and metadata
 about those files from SharePoint document libraries using direct
 database access. Bypassing application layer security has the benefit

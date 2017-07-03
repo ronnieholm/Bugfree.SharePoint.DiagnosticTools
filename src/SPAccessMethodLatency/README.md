@@ -1,5 +1,7 @@
 ﻿# SPAccessMethodLatency
 
+Download compiled version of tools under [Releases](https://github.com/ronnieholm/Bugfree.SharePoint.DiagnosticTools/releases).
+
 The purpose of this tool is to compare and contrast the write-read
 latency across SharePoint's data access methods. Through periodic
 measurements, the results can reveal performance issues and/or a

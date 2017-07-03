@@ -1,5 +1,7 @@
 # Bugfree.SharePoint.DiagnosticTools
 
+Download compiled version of tools under [Releases](https://github.com/ronnieholm/Bugfree.SharePoint.DiagnosticTools/releases).
+
 - [SPReports](https://github.com/ronnieholm/Bugfree.SharePoint.DiagnosticTools/tree/master/src/SPReports): Generates custom reports based on metadata in SharePoint by first collecting and dumping relevant metadata to a file and then quering it offline.
 - [SPAddInsAutomation](https://github.com/ronnieholm/Bugfree.SharePoint.DiagnosticTools/tree/master/src/SPAddInsAutomation): SharePointAddInsAutomation automates updating add-ins across site collections
 - [SPSearchIndexLatency](https://github.com/ronnieholm/Bugfree.SharePoint.DiagnosticTools/tree/master/src/SPSearchIndexLatency): Measures the liveliness of SharePoint's search index.

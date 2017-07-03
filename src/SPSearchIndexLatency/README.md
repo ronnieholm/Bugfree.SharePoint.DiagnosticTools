@@ -1,16 +1,15 @@
-SPSearchIndexLiveliness
-=======================
+# SPSearchIndexLiveliness
 
-When to use it
---------------
+Download compiled version of tools under [Releases](https://github.com/ronnieholm/Bugfree.SharePoint.DiagnosticTools/releases).
+
+## When to use it
 
 Measuring the liveliness of SharePoint's search index is particularly important 
 when developing search-driven applications. Especially since liveliness varies 
 over time. With SPSearchIndexLiveliness, any SharePoint user with write access 
 to a list can continuously measure how far behind the index is from content.
 
-How to use it
--------------
+## How to use it
 
 After compiling the solution, create a generic list anywhere visited by the 
 crawler. Then run SPSearchIndexLiveliness as follows (username and password are 
@@ -73,15 +72,13 @@ infinite latency. Queing-based (asynchronous) systems are generally build to sca
 better than request/reply-based (synchronous) systems. Forcing an asynchronous 
 system to operate in synchronous mode generally leads to bad performance.
 
-How it works
-------------
+## How it works
 
 Each ping interval around, SPSearchIndexLiveliness adds an item to a list and 
 queries the list using SharePoint Search. As the search result contains all 
 indexed list elements, latency is computed as the difference between current 
 time and creation time of the most recent item returned by search.
 
-Supported platforms
--------------------
+## Supported platforms
 
 SharePoint 2013 on-prem and SharePoint Online.

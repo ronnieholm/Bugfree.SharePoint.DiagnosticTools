@@ -1,5 +1,7 @@
 ﻿# SPWorkflowLatency
 
+Download compiled version of tools under [Releases](https://github.com/ronnieholm/Bugfree.SharePoint.DiagnosticTools/releases).
+
 (Documentation is work in progress.)
 
 The purpose of SPWorkflowLatency is to gauge the performance of

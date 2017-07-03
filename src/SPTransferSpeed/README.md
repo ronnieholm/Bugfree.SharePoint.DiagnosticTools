@@ -1,5 +1,7 @@
 # SPTransferSpeed
 
+Download compiled version of tools under [Releases](https://github.com/ronnieholm/Bugfree.SharePoint.DiagnosticTools/releases).
+
 ## When to use it
 
 For diagnosing network-related issues with the transfer speed between a user's
