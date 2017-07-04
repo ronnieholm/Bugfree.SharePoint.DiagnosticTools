@@ -25,7 +25,7 @@ module WebsWorkflows =
             | Some id ->
                 lookupListByGuid id
                 |> Option.bind (fun l -> Some (l.Url.ToString()))
-                |> Option.defaultValue (sprintf "List not found: %s" (id.ToString()))
+                |> Option.defaultValue (sprintf "Dangling workflow found. List with id '%s' to which workflow was associated no longer exists." (id.ToString()))
             | None -> "Not present"
 
         match w.Workflows with

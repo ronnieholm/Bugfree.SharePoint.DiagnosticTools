@@ -82,8 +82,8 @@ with
             match this with
             | Dump_metadata _ -> "dump metadata."
             | Webs_file_extensions_count _ -> "analyze dump and summarize files by extension and count."
-            | Webs_add_ins _ -> "analyse dump and summarize webs by add ins."
-            | Webs_Workflows _ -> "..."
+            | Webs_add_ins _ -> "analyze dump and create webs by add ins table."
+            | Webs_Workflows _ -> "analyze dump and create webs by workflow instances table."
             | List_solutions_from_tenant _ -> "lists solutions from tenant."
 
 let parsedArgsOrException args =
