@@ -27,7 +27,7 @@ associated, setup creates separate tasks list for SharePoint 2010 and
 SharePoint 2013 workflows. Separate lists are needed because each
 workflow engines uses a different type of list. The type of the
 Workflow history list is shared, though. Finally, setup activates the
-SharePoint 2010 Disposition workflow and associate it to the list. The
+SharePoint 2010 Disposition workflow and associates it to the list. The
 SharePoint 2013 workflow must be added manually.
 
     % .\SPWorkflowLatency.exe setup https://bugfree.sharepoint.com/sites/workflows Latencies rh@bugfree.onmicrosoft.com password
@@ -142,4 +142,4 @@ https://msdn.microsoft.com/en-us/library/office/jj163199.aspx
 
 ## Supported platforms
 
-SharePoint 2013, SharePoint Online
+SharePoint 2013, SharePoint Online.
