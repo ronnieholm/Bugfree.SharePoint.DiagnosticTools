@@ -6,6 +6,7 @@ open System.Xml.Linq
 open System.Collections.Generic
 open System.Text.RegularExpressions
 open System.Net
+open System.Globalization
 open Microsoft.SharePoint.Client
 open Microsoft.Online.SharePoint.TenantAdministration
 open Microsoft.SharePoint.Client.WorkflowServices
@@ -23,6 +24,7 @@ module DumpMetadata =
         static member QuoteS(e: Expression<System.Func<Site, obj>>) = e
         static member QuoteW(e: Expression<System.Func<Web, obj>>) = e
         static member QuoteL(e: Expression<System.Func<List, obj>>) = e
+        static member QuoteRS(e: Expression<System.Func<RegionalSettings, obj>>) = e
 
     [<Measure>] type mb
     type XE = XElement
@@ -97,12 +99,16 @@ module DumpMetadata =
         | BuildIn of BuildInWorkflow
         | Nintex of NintexWorkflow            
 
+    type RegionalSettings =
+        { Lcid: int } 
+
     type SPWeb =
         { Id: Guid
           Url: string
           Title: string
           LastModifiedDate: DateTime
           Created: DateTime
+          RegionalSettings: RegionalSettings
           AddInInstances: AddIn[] Option
           Workflows: Workflow[] Option
           Lists: SPList[] Option
@@ -180,6 +186,13 @@ module DumpMetadata =
             if m.Success then Some m.Groups.["v"].Value else None ] 
         |> Map.ofList
 
+    let localeToDateFormatString (web: Web) =
+        // Ideally, we would have liked for SharePoint to provide the format string based on the web's regional settings.
+        // No such API seems to exist and thus we make a qualified quess based on the LCID and its default values.
+        let rs = web.RegionalSettings
+        let format = CultureInfo(int(rs.LocaleId)).DateTimeFormat
+        sprintf "%s %s" format.ShortDatePattern format.LongTimePattern
+
     let parseWorkflows level (web: Web): Workflow[] =       
         printf "%s[Workflows]" (String.replicate level " ")
         let ctx = web.Context
@@ -201,7 +214,7 @@ module DumpMetadata =
                           Description = d.Description
                           AppAuthor = getOptionByKey p "AppAuthor"
                           LastModifiedBy = getByKey p "ModifiedBy"
-                          LastModifiedAt = DateTime.Parse(getByKey p "SMLastModifiedDate").ToUniversalTime()
+                          LastModifiedAt = DateTime.ParseExact(getByKey p "Definition.ModifiedDate", localeToDateFormatString web, CultureInfo.InvariantCulture)
                           RestrictToType = d.RestrictToType
                           RestrictToScope = if d.RestrictToScope = null then None else Some (d.RestrictToScope |> Guid)
                           Published = d.Published
@@ -212,7 +225,7 @@ module DumpMetadata =
                         { DisplayName = d.DisplayName
                           Description = d.Description
                           LastModifiedBy = getByKey p "ModifiedBy"
-                          LastModifiedAt = DateTime.Parse(getByKey p "SMLastModifiedDate").ToUniversalTime()
+                          LastModifiedAt = DateTime.ParseExact(getByKey p "Definition.ModifiedDate", localeToDateFormatString web, CultureInfo.InvariantCulture)
                           RestrictToType = d.RestrictToType
                           RestrictToScope = if d.RestrictToScope = null then None else Some (d.RestrictToScope |> Guid)
                           Published = d.Published
@@ -292,6 +305,13 @@ module DumpMetadata =
                             printfn ""
                             None } |]
 
+    let parseRegionalSettings (web: Web): RegionalSettings =
+        let ctx = web.Context
+        let rs = web.RegionalSettings
+        ctx.Load(rs, Expr.QuoteRS(fun r -> r.LocaleId :> obj))
+        ctx.ExecuteQuery()
+        { Lcid = int rs.LocaleId }
+
     let rec parseWeb level (web: Web) (o: Options) : SPWeb =
         printfn "%s[W] %s" (String.replicate level " ") web.Url        
         let ctx = web.Context
@@ -304,6 +324,7 @@ module DumpMetadata =
           Title = web.Title
           LastModifiedDate = web.LastItemModifiedDate
           Created = web.Created
+          RegionalSettings = parseRegionalSettings web
           AddInInstances = if o.IncludeAddIns then Some (parseAddIns nextLevel web) else None
           Workflows = if o.IncludeWorkflows then Some (parseWorkflows nextLevel web) else None
           Lists = if o.IncludeLists then Some (parseLists nextLevel web o) else None

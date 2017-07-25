@@ -39,11 +39,11 @@ module WebsWorkflows =
                                 (wf'.DisplayName.Replace(";", "-").Replace("\n", " "))
                                 (wf'.Description.Replace(";", "-").Replace("\n", " "))
                                 wf'.LastModifiedBy
-                                (wf'.LastModifiedAt.ToUniversalTime().ToString())
+                                (wf'.LastModifiedAt.ToString())
                                 wf'.RestrictToType
-                                (match wf'.RestrictToType with
-                                 | "List" -> listIdToString wf'.RestrictToScope
-                                 | _ as t -> failwithf "Unsupported RestrictType: %s" t)                            
+                                (wf'.RestrictToType |> function
+                                    | "List" -> listIdToString wf'.RestrictToScope
+                                    | _ as t -> failwithf "Unsupported RestrictType: %s" t)                            
                                 wf'.Published
                                 (listIdToString wf'.TaskListId)
                                 (listIdToString wf'.HistoryListId)
@@ -55,11 +55,11 @@ module WebsWorkflows =
                                 (wf'.DisplayName.Replace(";", "-").Replace("\n", " "))
                                 (wf'.Description.Replace(";", "-").Replace("\n", " "))
                                 wf'.LastModifiedBy
-                                (wf'.LastModifiedAt.ToUniversalTime().ToString())
-                                wf'.RestrictToType
-                                (match wf'.RestrictToType with
-                                 | "List" -> listIdToString wf'.RestrictToScope
-                                 | _ -> "Unsupported RestrictType")
+                                (wf'.LastModifiedAt.ToString())
+                                (wf'.RestrictToType)
+                                (wf'.RestrictToType |> function
+                                    | "List" -> listIdToString wf'.RestrictToScope
+                                    | _ -> "Unsupported RestrictType")
                                 wf'.Published
                                 "N/A"
                                 "N/A"
