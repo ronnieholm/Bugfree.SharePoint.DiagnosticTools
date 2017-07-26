@@ -5,7 +5,7 @@
 open System
 open System.Text.RegularExpressions
 open Microsoft.SharePoint.Client
-open SPReports.Helpers
+open Helpers
 
 module ListSolutionsFromTenant =
     type SandboxSolution =
@@ -29,7 +29,7 @@ module ListSolutionsFromTenant =
         let items = catalog.GetItems(query)
         ctx.Load(items)
         ctx.Load(catalog)
-        ctx.ExecuteQuery()
+        ctx.ExecuteQueryWithRetry()
 
         items 
         |> Seq.cast<ListItem>

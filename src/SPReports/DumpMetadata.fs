@@ -202,7 +202,7 @@ module DumpMetadata =
 
         ctx.Load(definitions)
         ctx.Load(web)
-        ctx.ExecuteQuery()
+        ctx.ExecuteQueryWithRetry()
 
         let workflows =
             [| for d in definitions |> Seq.filter (fun d -> d.RestrictToType = "List") do
@@ -241,7 +241,7 @@ module DumpMetadata =
         let ctx = web.Context
         let appInstances = AppCatalog.GetAppInstances(ctx, web)
         ctx.Load(appInstances)
-        ctx.ExecuteQuery()
+        ctx.ExecuteQueryWithRetry()
 
         let instances =
             appInstances |> Seq.map (fun i ->
@@ -278,23 +278,23 @@ module DumpMetadata =
                 let q = createAllItemsQuery p
                 let items''' = list.GetItems(q)
                 ctx.Load(items''')
-                ctx.ExecuteQuery()
+                ctx.ExecuteQueryWithRetry()
                 items'' @ (parseListInternal items''') 
         
         let query = createAllItemsQuery null
         let items = list.GetItems(query)
         ctx.Load(items)
-        ctx.ExecuteQuery()        
+        ctx.ExecuteQueryWithRetry()        
         (parseListInternal items) |> List.toArray
 
     let parseLists level (web: Web) (o: Options) =
         let ctx = web.Context
         let lists = web.Lists
-        ctx.ExecuteQuery()  
+        ctx.ExecuteQueryWithRetry()  
         [| for l in lists do
             printf "%s[L] %s" (String.replicate level " ") l.Title
             ctx.Load(l, [| Expr.QuoteL(fun l -> l.DefaultViewUrl :> obj); Expr.QuoteL(fun l -> l.BaseType :> obj) |])
-            ctx.ExecuteQuery()
+            ctx.ExecuteQueryWithRetry()
             yield { Id = l.Id; Url = getAbsoluteListUrl l; Title = l.Title; 
                     Items = 
                         if o.IncludeListItems then 
@@ -309,14 +309,14 @@ module DumpMetadata =
         let ctx = web.Context
         let rs = web.RegionalSettings
         ctx.Load(rs, Expr.QuoteRS(fun r -> r.LocaleId :> obj))
-        ctx.ExecuteQuery()
+        ctx.ExecuteQueryWithRetry()
         { Lcid = int rs.LocaleId }
 
     let rec parseWeb level (web: Web) (o: Options) : SPWeb =
         printfn "%s[W] %s" (String.replicate level " ") web.Url        
         let ctx = web.Context
         ctx.Load(web, [|Expr.QuoteW(fun w -> w.Lists :> obj); Expr.QuoteW(fun w -> w.Webs :> obj)|])                      
-        ctx.ExecuteQuery()
+        ctx.ExecuteQueryWithRetry()
 
         let nextLevel = level + 2
         { Id = web.Id
@@ -337,7 +337,7 @@ module DumpMetadata =
         let rootWeb = ctx.Site.RootWeb
         ctx.Load(site, [|Expr.QuoteS(fun s -> s.Id :> obj); Expr.QuoteS(fun s -> s.Url :> obj); Expr.QuoteS(fun s -> s.RootWeb :> obj)|])
         ctx.Load(rootWeb, [|Expr.QuoteW(fun w -> w.Url :> obj); Expr.QuoteW(fun w -> w.Lists :> obj); Expr.QuoteW(fun w -> w.Webs :> obj)|])       
-        ctx.ExecuteQuery()
+        ctx.ExecuteQueryWithRetry()
 
         { Id = site.Id
           Url = site.Url

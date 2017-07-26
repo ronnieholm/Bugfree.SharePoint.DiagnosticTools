@@ -1,7 +1,9 @@
 ﻿namespace SPReports
 
 open System
+open System.Net
 open System.Security
+open System.Threading
 open System.Collections.Generic
 open Microsoft.SharePoint.Client
 open Microsoft.Online.SharePoint.TenantAdministration
@@ -43,3 +45,18 @@ module Helpers =
         |> Seq.take (if isDocumentLibrary then (length - 2) else (length - 1)) 
         |> Seq.skip 3
         |> Seq.fold (sprintf "%s/%s") l.Context.Url |> Uri
+
+    type ClientRuntimeContext with
+        member this.ExecuteQueryWithRetry () =
+            let rec aux retryCount (backoffDuration: int) = 
+                try
+                    this.ExecuteQuery()
+                with                   
+                | :? WebException as e ->
+                    let wr = e.Response :?> HttpWebResponse
+                    if wr <> null && (wr.StatusCode = (* throtled *) enum 429 || wr.StatusCode = (* server unavailable *) enum 503) then
+                        Thread.Sleep(backoffDuration)
+                        if retryCount > 0 then aux (retryCount - 1) (backoffDuration * 2)
+                    else
+                        reraise()
+            aux 10 500
