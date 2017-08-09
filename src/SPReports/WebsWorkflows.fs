@@ -33,13 +33,12 @@ module WebsWorkflows =
             for wf in workflows do
                 match wf with
                 | BuildIn wf' ->
-                    lines.Add(sprintf "%s; %s; %s; %s; %s; %s; %s; %s; %A; %s; %s; %s;"
+                    lines.Add(sprintf "%s; %s; %s; %s; %s; %s; %s; %A; %s; %s; %s;"
                                 "BuildIn"
                                 w.Url
                                 (wf'.DisplayName.Replace(";", "-").Replace("\n", " "))
                                 (wf'.Description.Replace(";", "-").Replace("\n", " "))
                                 wf'.LastModifiedBy
-                                (wf'.LastModifiedAt.ToString())
                                 wf'.RestrictToType
                                 (wf'.RestrictToType |> function
                                     | "List" -> listIdToString wf'.RestrictToScope
@@ -49,13 +48,12 @@ module WebsWorkflows =
                                 (listIdToString wf'.HistoryListId)
                                 "")
                 | Nintex wf' ->
-                    lines.Add(sprintf "%s; %s; %s; %s; %s; %s; %s; %s; %A; %s; %s; %s;"
+                    lines.Add(sprintf "%s; %s; %s; %s; %s; %s; %s; %A; %s; %s; %s;"
                                 "Nintex"
                                 w.Url
                                 (wf'.DisplayName.Replace(";", "-").Replace("\n", " "))
                                 (wf'.Description.Replace(";", "-").Replace("\n", " "))
                                 wf'.LastModifiedBy
-                                (wf'.LastModifiedAt.ToString())
                                 (wf'.RestrictToType)
                                 (wf'.RestrictToType |> function
                                     | "List" -> listIdToString wf'.RestrictToScope
@@ -78,5 +76,5 @@ module WebsWorkflows =
 
     let generateReport dump =
         dump |> Seq.iter visitSiteCollection
-        [| yield "WorkflowType; WebUrl; DisplayName; Description; LastModifiedBy; LastModifiedAt; RestrictToType; RestrictToScope; Published; TaskListId (OutOfTheBox); HistoryListId (OutOfTheBox); Region (Nintex)"
+        [| yield "WorkflowType; WebUrl; DisplayName; Description; LastModifiedBy; RestrictToType; RestrictToScope; Published; TaskListId (OutOfTheBox); HistoryListId (OutOfTheBox); Region (Nintex)"
            for l in lines do yield l |]

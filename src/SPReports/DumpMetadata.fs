@@ -6,7 +6,6 @@ open System.Xml.Linq
 open System.Collections.Generic
 open System.Text.RegularExpressions
 open System.Net
-open System.Globalization
 open Microsoft.SharePoint.Client
 open Microsoft.Online.SharePoint.TenantAdministration
 open Microsoft.SharePoint.Client.WorkflowServices
@@ -72,7 +71,6 @@ module DumpMetadata =
         { DisplayName: string
           Description: string
           LastModifiedBy: string
-          LastModifiedAt: DateTime
           RestrictToType: string
           RestrictToScope: Guid option
           Published: bool
@@ -83,7 +81,6 @@ module DumpMetadata =
         { DisplayName: string
           Description: string
           LastModifiedBy: string
-          LastModifiedAt: DateTime
           RestrictToType: string
 
           // Has been observed to be null even for RestrictToType = "List"
@@ -186,13 +183,6 @@ module DumpMetadata =
             if m.Success then Some m.Groups.["v"].Value else None ] 
         |> Map.ofList
 
-    let localeToDateFormatString (web: Web) =
-        // Ideally, we would have liked for SharePoint to provide the format string based on the web's regional settings.
-        // No such API seems to exist and thus we make a qualified quess based on the LCID and its default values.
-        let rs = web.RegionalSettings
-        let format = CultureInfo(int(rs.LocaleId)).DateTimeFormat
-        sprintf "%s %s" format.ShortDatePattern format.LongTimePattern
-
     let parseWorkflows level (web: Web): Workflow[] =       
         printf "%s[Workflows]" (String.replicate level " ")
         let ctx = web.Context
@@ -214,7 +204,6 @@ module DumpMetadata =
                           Description = d.Description
                           AppAuthor = getOptionByKey p "AppAuthor"
                           LastModifiedBy = getByKey p "ModifiedBy"
-                          LastModifiedAt = DateTime.ParseExact(getByKey p "Definition.ModifiedDate", localeToDateFormatString web, CultureInfo.InvariantCulture)
                           RestrictToType = d.RestrictToType
                           RestrictToScope = if d.RestrictToScope = null then None else Some (d.RestrictToScope |> Guid)
                           Published = d.Published
@@ -225,7 +214,6 @@ module DumpMetadata =
                         { DisplayName = d.DisplayName
                           Description = d.Description
                           LastModifiedBy = getByKey p "ModifiedBy"
-                          LastModifiedAt = DateTime.ParseExact(getByKey p "Definition.ModifiedDate", localeToDateFormatString web, CultureInfo.InvariantCulture)
                           RestrictToType = d.RestrictToType
                           RestrictToScope = if d.RestrictToScope = null then None else Some (d.RestrictToScope |> Guid)
                           Published = d.Published

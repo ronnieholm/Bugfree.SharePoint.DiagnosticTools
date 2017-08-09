@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## SPReports 1.4.0 (2017-07-26)
+## SPReports 1.4.1 (2017-08-09)
 
 * Adjust for removed SMLastModifiedDate property on WorkflowDefinition ([#1](https://github.com/ronnieholm/Bugfree.SharePoint.DiagnosticTools/issues/1))
 * Prevent dumping tenant metadata from failing due to intermittent communication issues ([#2](https://github.com/ronnieholm/Bugfree.SharePoint.DiagnosticTools/issues/2))
