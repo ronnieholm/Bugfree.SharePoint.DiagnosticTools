@@ -9,3 +9,4 @@
 - Finish dump by showing report of runtime, objects indexed, warnings
 - Update documentation to reflect new commands
 - Rewrite ListSolutions to use binary index
+- Use new CSOM API support for accessing file and item version information ([example](https://dev.office.com/blogs/new-sharepoint-csom-version-released-for-Office-365-september-2017))
