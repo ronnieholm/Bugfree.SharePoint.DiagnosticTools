@@ -338,7 +338,7 @@ module DumpMetadata =
 
     let dump userName password tenantName =
         //let options = { IncludeWebs = true; IncludeLists = true; IncludeListItems = true; IncludeWorkflows = true; IncludeAddIns = true }
-        let options = { IncludeWebs = true; IncludeLists = true; IncludeListItems = false; IncludeWorkflows = true; IncludeAddIns = true }
+        let options = { IncludeWebs = true; IncludeLists = true; IncludeListItems = true; IncludeWorkflows = true; IncludeAddIns = true }
 
         let createClientContext' = createClientContext userName password               
         getSiteCollections createClientContext' true (*false*) (sprintf "https://%s-admin.sharepoint.com" tenantName)
