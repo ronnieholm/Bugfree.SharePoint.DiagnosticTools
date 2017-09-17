@@ -9,72 +9,64 @@ open System
 open System.Collections.Generic
 open SPReports.DumpMetadata
 
-module WebsWorkflows =
-    let lines = ResizeArray<string>()
-    let guidListUrl = Dictionary<Guid, string>()
+type WebsWorkflowVisitor() = 
+    inherit DumpVisitor()
+    let mutable webUrl = ""
+    let mutable (listIdToString: Guid option -> string) = fun __ -> ""
+    member val Lines = ResizeArray<string>() with get, set
 
-    let rec visitWeb level (w: SPWeb) =        
-        printfn "W: %s%s" (String.replicate level " ") w.Url               
-        let lookupListByGuid g = 
+    override __.Visit(w: SPWeb) =
+        let lookupListById guid =
             match w.Lists with
-            | Some lists -> lists |> Array.tryFind (fun l -> l.Id = g)
+            | Some lists -> lists |> Array.tryFind (fun l -> l.Id = guid)
             | None -> None
 
-        let listIdToString id =
-            match id with
-            | Some id ->
-                lookupListByGuid id
-                |> Option.bind (fun l -> Some (l.Url.ToString()))
-                |> Option.defaultValue (sprintf "Dangling workflow found. List with id '%s' to which workflow was associated no longer exists. Delete workflow using SharePoint Designer or object model." (id.ToString()))
-            | None -> "Not present"
+        webUrl <- w.Url      
+        listIdToString <-
+            fun id ->
+                match id with
+                | Some id ->
+                    lookupListById id
+                    |> Option.bind (fun l -> Some (l.Url.ToString()))
+                    |> Option.defaultValue (sprintf "Dangling workflow found. List with id '%s' to which workflow was associated no longer exists. Delete workflow using SharePoint Designer or object model." (id.ToString()))
+                | None -> "Not present"
 
-        match w.Workflows with
-        | Some workflows ->
-            for wf in workflows do
-                match wf with
-                | BuildIn wf' ->
-                    lines.Add(sprintf "%s; %s; %s; %s; %s; %s; %s; %A; %s; %s; %s;"
-                                "BuildIn"
-                                w.Url
-                                (wf'.DisplayName.Replace(";", "-").Replace("\n", " "))
-                                (wf'.Description.Replace(";", "-").Replace("\n", " "))
-                                wf'.LastModifiedBy
-                                wf'.RestrictToType
-                                (wf'.RestrictToType |> function
-                                    | "List" -> listIdToString wf'.RestrictToScope
-                                    | _ as t -> failwithf "Unsupported RestrictType: %s" t)                            
-                                wf'.Published
-                                (listIdToString wf'.TaskListId)
-                                (listIdToString wf'.HistoryListId)
-                                "")
-                | Nintex wf' ->
-                    lines.Add(sprintf "%s; %s; %s; %s; %s; %s; %s; %A; %s; %s; %s;"
-                                "Nintex"
-                                w.Url
-                                (wf'.DisplayName.Replace(";", "-").Replace("\n", " "))
-                                (wf'.Description.Replace(";", "-").Replace("\n", " "))
-                                wf'.LastModifiedBy
-                                (wf'.RestrictToType)
-                                (wf'.RestrictToType |> function
-                                    | "List" -> listIdToString wf'.RestrictToScope
-                                    | _ -> "Unsupported RestrictType")
-                                wf'.Published
-                                "N/A"
-                                "N/A"
-                                (match wf'.Region with | Some r -> r | None -> ""))
-        | None -> ()
-        
-        match w.Webs with
-        | Some webs -> webs |> Seq.iter (visitWeb (level + 2))
-        | None -> ()
+     override this.Visit(wf: Workflow) =
+        match wf with
+        | BuildIn wf' ->
+            this.Lines.Add(sprintf "%s; %s; %s; %s; %s; %s; %s; %A; %s; %s; %s;"
+                        "BuildIn"
+                        webUrl
+                        (wf'.DisplayName.Replace(";", "-").Replace("\n", " "))
+                        (wf'.Description.Replace(";", "-").Replace("\n", " "))
+                        wf'.LastModifiedBy
+                        wf'.RestrictToType
+                        (wf'.RestrictToType |> function
+                            | "List" -> listIdToString wf'.RestrictToScope
+                            | _ as t -> failwithf "Unsupported RestrictType: %s" t)                            
+                        wf'.Published
+                        (listIdToString wf'.TaskListId)
+                        (listIdToString wf'.HistoryListId)
+                        "")
+        | Nintex wf' ->
+            this.Lines.Add(sprintf "%s; %s; %s; %s; %s; %s; %s; %A; %s; %s; %s;"
+                        "Nintex"
+                        webUrl
+                        (wf'.DisplayName.Replace(";", "-").Replace("\n", " "))
+                        (wf'.Description.Replace(";", "-").Replace("\n", " "))
+                        wf'.LastModifiedBy
+                        (wf'.RestrictToType)
+                        (wf'.RestrictToType |> function
+                            | "List" -> listIdToString wf'.RestrictToScope
+                            | _ -> "Unsupported RestrictType")
+                        wf'.Published
+                        "N/A"
+                        "N/A"
+                        (match wf'.Region with | Some r -> r | None -> ""))
 
-    let visitSiteCollection (sc: SPSiteCollection) =     
-        printfn "SC: %s" sc.Url
-        match sc.RootWeb with
-        | Some sc' -> visitWeb 2 sc'
-        | None -> ()
-
+module WebsWorkflows =
     let generateReport dump =
-        dump |> Seq.iter visitSiteCollection
-        [| yield "WorkflowType; WebUrl; DisplayName; Description; LastModifiedBy; RestrictToType; RestrictToScope; Published; TaskListId (OutOfTheBox); HistoryListId (OutOfTheBox); Region (Nintex)"
-           for l in lines do yield l |]
+        let v = WebsWorkflowVisitor()
+        DepthFirstTraverser(v).Visit(dump)     
+        v.Lines.Insert(0, "WorkflowType; WebUrl; DisplayName; Description; LastModifiedBy; RestrictToType; RestrictToScope; Published; TaskListId (OutOfTheBox); HistoryListId (OutOfTheBox); Region (Nintex)")
+        v.Lines.AsReadOnly()

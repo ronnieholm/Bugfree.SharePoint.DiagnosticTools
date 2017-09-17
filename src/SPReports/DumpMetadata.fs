@@ -5,7 +5,6 @@ open System.Linq.Expressions
 open System.Xml.Linq
 open System.Collections.Generic
 open System.Text.RegularExpressions
-open System.Net
 open Microsoft.SharePoint.Client
 open Microsoft.Online.SharePoint.TenantAdministration
 open Microsoft.SharePoint.Client.WorkflowServices

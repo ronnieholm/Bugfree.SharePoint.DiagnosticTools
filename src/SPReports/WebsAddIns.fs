@@ -2,35 +2,25 @@
 
 open SPReports.DumpMetadata
 
-module WebsAddIns =
-    let lines = ResizeArray<string>()
+type WebsAddInsVisitor() = 
+    inherit DumpVisitor()
+    let mutable webUrl = ""
+    member val Lines = ResizeArray<string>() with get, set
 
-    let rec visitWeb level (w: SPWeb) =        
-        printfn "W: %s%s" (String.replicate level " ") w.Url
-        match w.AddInInstances with
-        | Some instances ->
-            for a in instances do
-                lines.Add(sprintf "%s; %s; %s; %s; %s; %s; %s" 
-                            (a.Id.ToString()) 
-                            w.Url
-                            (a.ProductId.ToString()) 
-                            a.Title 
-                            (match a.Version_ with | Some v -> v | None -> "N/A") 
-                            a.AppPrincipalId 
-                            a.AppWebFullUrl)
-        | None -> ()
+    override __.Visit(w: SPWeb) = webUrl <- w.Url
+    override this.Visit(i: AddIn) = 
+        this.Lines.Add(sprintf "%s; %s; %s; %s; %s; %s; %s" 
+                        (i.Id.ToString()) 
+                        webUrl
+                        (i.ProductId.ToString()) 
+                        i.Title 
+                        (match i.Version_ with | Some v -> v | None -> "N/A") 
+                        i.AppPrincipalId 
+                        i.AppWebFullUrl)
 
-        match w.Webs with
-        | Some webs -> webs |> Seq.iter (visitWeb (level + 2))
-        | None -> ()
-
-    let visitSiteCollection (sc: SPSiteCollection) =     
-        printfn "SC: %s" sc.Url
-        match sc.RootWeb with
-        | Some sc' -> visitWeb 2 sc'
-        | None -> ()
-
+module WebsAddIns = 
     let generateReport dump =
-        dump |> Seq.iter visitSiteCollection
-        [| yield "Id; WebUrl; ProductId; Title; Version (Nintex); AppPrincipalId; AppWebFullUrl"
-           for s in lines do yield s |]
+        let v = WebsAddInsVisitor()
+        DepthFirstTraverser(v).Visit(dump)        
+        v.Lines.Insert(0, "Id; WebUrl; ProductId; Title; Version (Nintex); AppPrincipalId; AppWebFullUrl")
+        v.Lines.AsReadOnly()

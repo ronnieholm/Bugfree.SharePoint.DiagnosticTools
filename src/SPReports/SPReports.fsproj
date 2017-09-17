@@ -64,6 +64,7 @@
     <Compile Include="Helpers.fs" />
     <Compile Include="ListSolutionsFromTenant.fs" />
     <Compile Include="DumpMetadata.fs" />
+    <Compile Include="DumpVisitor.fs" />
     <Compile Include="WebsFileExtensionsCount.fs" />
     <Compile Include="WebsWorkflows.fs" />
     <Compile Include="WebsAddIns.fs" />
