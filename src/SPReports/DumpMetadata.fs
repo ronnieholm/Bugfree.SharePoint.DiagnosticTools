@@ -338,7 +338,7 @@ module DumpMetadata =
 
     let dump userName password tenantName =
         //let options = { IncludeWebs = true; IncludeLists = true; IncludeListItems = true; IncludeWorkflows = true; IncludeAddIns = true }
-        let options = { IncludeWebs = true; IncludeLists = true; IncludeListItems = true; IncludeWorkflows = true; IncludeAddIns = true }
+        let options = { IncludeWebs = true; IncludeLists = false; IncludeListItems = false; IncludeWorkflows = false; IncludeAddIns = false }
 
         let createClientContext' = createClientContext userName password               
         getSiteCollections createClientContext' true (*false*) (sprintf "https://%s-admin.sharepoint.com" tenantName)
@@ -349,8 +349,8 @@ module DumpMetadata =
             try
                 Some (parseSiteCollection createClientContext' properties options)
             with    
-            | :? WebException as e when e.Message = "The remote server returned an error: (401) Unauthorized." ->
-                eprintfn "%s: %s" (properties.Url) e.Message
+            | :? ServerUnauthorizedAccessException as e ->
+                eprintfn "%s: %s: %s" (properties.Url) (e.ServerErrorTypeName) e.Message
                 None
             | _ -> reraise())
         |> Array.choose id
