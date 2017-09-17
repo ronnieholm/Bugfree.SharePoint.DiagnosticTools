@@ -17,7 +17,7 @@ SUBCOMMANDS:
     --webs-file-extensions-count <options>
                           analyze dump and summarize files by extension and count.
     --webs-add-ins <options>
-                          analyze dump and create webs by add ins table.
+                          analyze dump and create webs by add-ins table.
     --webs-workflows <options>
                           analyze dump and create webs by workflow instances table.
 
