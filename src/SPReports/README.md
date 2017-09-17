@@ -12,16 +12,14 @@ USAGE: SPReports.exe [--help] [<subcommand> [<options>]]
 
 SUBCOMMANDS:
 
-    --list-solutions-from-tenant <options>
-                          lists solutions from tenant.
     --dump-metadata <options>
                           dump metadata.
     --webs-file-extensions-count <options>
                           analyze dump and summarize files by extension and count.
     --webs-add-ins <options>
-                          analyse dump and summarize webs by add ins.
+                          analyze dump and create webs by add ins table.
     --webs-workflows <options>
-                          ...
+                          analyze dump and create webs by workflow instances table.
 
     Use 'SPReports.exe <subcommand> --help' for additional information.
 
@@ -86,28 +84,6 @@ from Nintex instances.
 Example:
 
     .\SPReports.exe --webs-workflows --input-path .\dump.bin --output-path .\dump.csv
-
-## --list-solutions-from-tenant
-
-Collects metadata about sandbox solutions installed across the tenant
-and dumps those to a CSV file. In SharePoint Online, this is
-especially useful for finding code-based sandbox solutions which are
-deactivated as per [Removing Code-Based Sandbox Solutions in
-SharePoint
-Online](http://dev.office.com/blogs/removing-code-based-sandbox-solutions-in-sharepoint-online),
-but it'll also to list imported templates which are really
-non-code-based sandbox solutions.
-
-Example:
-
-    .\SPReports.exe --list-solutions-from-tenant --username rh@bugfree.onmicrosoft.com --password secret --tenant-name bugfree --csv-output-path sandboxSolutions.csv
-
-Compared to
-[PnP-Tools](https://github.com/OfficeDev/PnP-Tools/tree/master/Scripts/SharePoint.Sandbox.ListSolutionsFromTenant),
-this solution visits site collection in parallel yielding an
-improvement from 1.2 to 3 site collections/second.
-
-The username provided must be a tenant administrator.
 
 ## Supported platforms
 

@@ -12,20 +12,6 @@ open SPReports.WebsFileExtensionsCount
 open SPReports.WebsAddIns
 open SPReports.WebsWorkflows
 
-type ListSolutionsFromTenantArgs =
-    | [<Mandatory>] Username of username: string
-    | [<Mandatory>] Password of password: string
-    | [<Mandatory>] Tenant_name of name: string
-    | [<Mandatory>] Csv_Output_path of path: string
-with
-    interface IArgParserTemplate with
-        member s.Usage =
-            match s with
-            | Username _ -> "username of the form <user>@<tenant>.onmicrosoft.com."
-            | Password _ -> "password matching username."
-            | Tenant_name _ -> "tenant name part of the admin center url of the form https://<tenant>-admin.sharepoint.com."
-            | Csv_Output_path _ -> "path and filename to CSV file location."
-
 type DumpMetadataArgs =
     | [<Mandatory>] Username of username: string
     | [<Mandatory>] Password of password: string
@@ -75,7 +61,6 @@ type CLIArguments =
     | Webs_file_extensions_count of ParseResults<WebsFileExtensionsCountArgs>
     | Webs_add_ins of ParseResults<WebsAddInsArgs>
     | Webs_Workflows of ParseResults<WebsWorkflowsArgs>
-    | List_solutions_from_tenant of ParseResults<ListSolutionsFromTenantArgs>
 with
     interface IArgParserTemplate with
         member this.Usage =
@@ -84,7 +69,6 @@ with
             | Webs_file_extensions_count _ -> "analyze dump and summarize files by extension and count."
             | Webs_add_ins _ -> "analyze dump and create webs by add ins table."
             | Webs_Workflows _ -> "analyze dump and create webs by workflow instances table."
-            | List_solutions_from_tenant _ -> "lists solutions from tenant."
 
 let parsedArgsOrException args =
     try
@@ -129,27 +113,6 @@ let main argv =
                 let dump = binary.UnPickle<SPSiteCollection[]>(File.ReadAllBytes(r.GetResult <@ WebsWorkflowsArgs.Input_path @>))
                 let csv = WebsWorkflows.generateReport dump
                 File.WriteAllLines(r.GetResult <@ WebsWorkflowsArgs.Output_path @>, csv, Encoding.UTF8)
-
-            | List_solutions_from_tenant r ->
-                let sandboxSolutions = ListSolutionsFromTenant.generateReport (r.GetResult <@ ListSolutionsFromTenantArgs.Username @>) (r.GetResult <@ ListSolutionsFromTenantArgs.Password @>) (r.GetResult <@ ListSolutionsFromTenantArgs.Tenant_name @>)
-                let nl = System.Environment.NewLine
-                let header = sprintf "SiteCollectionUrl; WSPName; Author; CreatedAt; Actived; HasAssemblies; SolutionHash%s" nl
-
-                let csv = 
-                    sandboxSolutions
-                    |> Array.fold (fun acc c ->
-                        let line = 
-                            sprintf "%s; %s; %s; %A; %A; %A; %s" 
-                                c.SiteCollectionUrl 
-                                c.WspName  
-                                c.Author 
-                                c.CreatedAt 
-                                c.Activated 
-                                c.HasAssemblies 
-                                c.SolutionHash
-                        acc + line + nl) header
-                File.WriteAllText(r.GetResult <@ ListSolutionsFromTenantArgs.Csv_Output_path @>, csv, Encoding.UTF8)
-                printfn "Wrote %s" (r.GetResult <@ ListSolutionsFromTenantArgs.Csv_Output_path @>)
 
         | None -> 
             printfn "%s" (args.Parser.PrintUsage())

@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## SPReports 1.5.0 (2017-09-17)
+
+* Updated Nuget packages to latest version
+* Implemented visitor pattern rather than having each report do its own traversal
+* Removed support for list-solutions-from-tenant as SPO no longer supports code-based solutions
+
 ## SPReports 1.4.1 (2017-08-09)
 
 * Adjust for removed SMLastModifiedDate property on WorkflowDefinition ([#1](https://github.com/ronnieholm/Bugfree.SharePoint.DiagnosticTools/issues/1))

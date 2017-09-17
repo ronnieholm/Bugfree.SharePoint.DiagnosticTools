@@ -44,7 +44,7 @@ type DepthFirstTraverser(visitor: DumpVisitor) =
         | None -> ()
 
         match w.Lists with
-        | Some lists -> lists |> Array.iter (fun l -> visitList (level + 2) l)
+        | Some lists -> lists |> Array.iter (visitList (level + 2))
         | None -> ()
 
         match w.Webs with
