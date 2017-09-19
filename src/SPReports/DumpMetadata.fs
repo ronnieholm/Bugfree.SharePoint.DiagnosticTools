@@ -336,8 +336,8 @@ module DumpMetadata =
           RootWeb = if o.IncludeWebs then Some (parseWeb 0 rootWeb o) else None }
 
     let dump userName password tenantName =
-        //let options = { IncludeWebs = true; IncludeLists = true; IncludeListItems = true; IncludeWorkflows = true; IncludeAddIns = true }
-        let options = { IncludeWebs = true; IncludeLists = false; IncludeListItems = false; IncludeWorkflows = false; IncludeAddIns = false }
+        let options = { IncludeWebs = true; IncludeLists = true; IncludeListItems = true; IncludeWorkflows = true; IncludeAddIns = true }
+        //let options = { IncludeWebs = true; IncludeLists = false; IncludeListItems = false; IncludeWorkflows = false; IncludeAddIns = false }
 
         let createClientContext' = createClientContext userName password               
         getSiteCollections createClientContext' true (*false*) (sprintf "https://%s-admin.sharepoint.com" tenantName)
