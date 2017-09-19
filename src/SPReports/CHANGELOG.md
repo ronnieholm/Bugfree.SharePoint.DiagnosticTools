@@ -1,6 +1,6 @@
 # CHANGELOG
 
-## SPReports 1.5.0 (2017-09-19)
+## SPReports 1.5.1 (2017-09-19)
 
 * Enabled full metadata dump with --dump-metadata.
 
