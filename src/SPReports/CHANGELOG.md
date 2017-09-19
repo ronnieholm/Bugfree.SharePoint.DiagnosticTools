@@ -1,5 +1,9 @@
 # CHANGELOG
 
+## SPReports 1.5.0 (2017-09-19)
+
+* Enabled full metadata dump with --dump-metadata.
+
 ## SPReports 1.5.0 (2017-09-17)
 
 * Updated Nuget packages to latest version
